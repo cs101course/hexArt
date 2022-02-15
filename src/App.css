@@ -1,0 +1,120 @@
+body {
+  background-color: white;
+  font-family: sans-serif;
+}
+
+.app {
+}
+
+.editor {
+  width: 100%;
+  border: 1px solid #eee;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid rgb(92, 98, 130);
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  color: #444;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  background-color: rgb(220, 220, 238);
+}
+
+.button:hover {
+  color: #fff;
+  background-color: rgb(114, 123, 163);
+}
+
+.toolbar {
+  display: flex;
+  
+  justify-content: space-between;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #aaa;
+}
+
+.top-toolbar {
+  padding: 6px;
+}
+
+.toolbar-header {
+  padding-bottom: 10px;
+}
+
+.option {
+  display: block;
+}
+
+.input {
+  display: block;
+  margin-top: 8px;
+  padding-bottom: 6px;
+}
+
+
+.code-comment {
+  color: #888888;
+}
+
+.artwork {
+  border: 1px solid #eee;
+}
+
+.optional-text {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.artwork-space {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.instruction {
+  line-height: 1.5em;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.goBack {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 1.5em;
+}
+
+.viewer {
+  display: flex;
+}
+
+.hexView {
+  width: 256px;
+  height: 256px;
+  border: 1px solid #eee;
+  overflow: hidden;
+}
+
+.hexLine {
+  width: 256px;
+}
+
+.hexCell {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  font-family: monospace;
+}
