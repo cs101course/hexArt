@@ -9,6 +9,7 @@ import {
 } from "@openlearning/xapi";
 
 import { App } from "./App";
+import { Exhibit } from "./Exhibit";
 
 const lrsConfig = initLrs();
 
@@ -26,62 +27,69 @@ const urlParams = new URLSearchParams(window.location.search);
 // to render a pre-made data, read-only
 const dataB64 = urlParams.get("data");
 
-const dataInUrl = JSON.parse(dataB64 ? b64UrlToAscii(dataB64) : "[]");
+const dataInUrl = JSON.parse(dataB64 ? b64UrlToAscii(dataB64) : "{}");
 
-const dataAccessUrl = new URL(document.location.href);
+const renderExhibit = ({ level, text }: { level: number, text: string }) => {
+  ReactDOM.render(
+    <Exhibit level={level} text={text}/>,
+    document.getElementById("root")
+  );
+}
 
-const render = (
-  onSave: (levelData: string[]) => Promise<void>,
+const renderApp = (
   initialLevelData: string[]
 ) => {
   ReactDOM.render(
-    <App onSave={onSave} initialLevelData={initialLevelData}/>,
+    <App onSave={lrsSave} initialLevelData={initialLevelData}/>,
     document.getElementById("root")
   );
 };
 
 const lrsSave = (data: string[]) => {
-  dataAccessUrl.search = `?data=${asciiToB64Url(JSON.stringify(data))}`;
-
-  // TODO multiple attachments on save
-
-  // Save and Share
-  return Promise.all([
-    saveActivityState(lrsConfig, "data", {
-      text: data
-    }),
-    saveAttachments(lrsConfig, [
-      {
-        contentType: "text/html",
-        fileUrl: dataAccessUrl.toString(),
-        description: "A chart created by the learner",
-        display: "Chart",
-      },
-    ])
-  ]).then(() => {});
-};
-
-const errorSave = (data: string[]) => {
-  // If there's no LRS configured, just throw an error with the data URL
-  dataAccessUrl.search = `?data=${asciiToB64Url(JSON.stringify(data))}`;
-  return Promise.reject({
-    error: "No LRS Configured",
-    dataUrl: dataAccessUrl.toString(),
+  const attachments = data.map((levelText, i) => {
+    const dataAccessUrl = new URL(document.location.href);
+    dataAccessUrl.search = `?data=${asciiToB64Url(JSON.stringify({
+      level: i,
+      text: levelText}
+    ))}`;
+    
+    return {
+      contentType: "text/html",
+      fileUrl: dataAccessUrl.toString(),
+      description: "An artwork created using binary or hexadecimal",
+      display: `Artwork ${i+1}`,
+    }
   });
+
+  const state = {
+    levels: data
+  };
+
+  if (lrsConfig) {
+    // Save and Share
+    return Promise.all([
+      saveActivityState(lrsConfig, "data", state),
+      saveAttachments(lrsConfig, attachments)
+    ]).then(() => {});
+  } else {
+    console.log(attachments);
+    console.log(state);
+    return Promise.reject(new Error("No LRS Configured"));
+  }
 };
 
-if (dataInUrl) {
+if (dataInUrl && dataInUrl.text) {
   // there's a data in the URL, render using this and no save
-  render(null, dataInUrl);
+  renderExhibit(dataInUrl);
 } else if (lrsConfig) {
   // try load
   retrieveActivityState(lrsConfig, "data", null).then((data) => {
     const stateObject: any = data;
     const stateText: string = stateObject?.text || "";
 
-    render(lrsSave, JSON.parse(stateText));
+    renderApp(JSON.parse(stateText));
   });
 } else {
   // testing purposes
-  render(errorSave, []);
+  renderApp([]);
 }

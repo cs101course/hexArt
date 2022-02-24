@@ -1,6 +1,8 @@
 body {
   background-color: white;
-  font-family: sans-serif;
+  font-size: 1em;
+  text-rendering: optimizeLegibility;
+  font-family: "Open Sans", Helvetica, sans-serif;
 }
 
 .app {
@@ -66,6 +68,7 @@ body {
 
 .artwork {
   border: 1px solid #eee;
+  padding: 55px;
 }
 
 .optional-text {
@@ -104,6 +107,7 @@ h1 {
   height: 256px;
   border: 1px solid #eee;
   overflow: hidden;
+  margin: 55px;
 }
 
 .hexLine {
@@ -117,4 +121,12 @@ h1 {
   line-height: 32px;
   text-align: center;
   font-family: monospace;
+}
+
+.hexLine:nth-child(odd) .hexCell:nth-child(even) {
+  background-color: #eee;
+}
+
+.hexLine:nth-child(even) .hexCell:nth-child(odd) {
+  background-color: #eee;
 }
